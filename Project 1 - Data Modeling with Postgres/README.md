@@ -23,3 +23,4 @@ To meet the demands of the project, the following tables were created.
 5. **time** - timestamps of records in **songplays** broken down into specific units
 - start_time: TIMESTAMP, hour: INT, day: INT, week: INT, month: INT, year: INT, weekday: VARCHAR
 
+![](img/schema.png)
