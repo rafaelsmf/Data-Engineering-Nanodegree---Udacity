@@ -36,17 +36,17 @@ To do that, we'll use the approach one query for one table.
 
 ### Table 1: `session_history_table`
 To answer the first question, we must:
-- select `artistName`, `song`, `length`
+- select `artist`, `song`, `length`
 - filtering by `sessionId` and `itemInSession`
 
-So, the **partition key** = `sessionId` and the **clustering key** = `itemInSession`. In addition, we include `artistName`, `song` and `lenght` as columns in our table.
+So, the **partition key** = `sessionId` and the **clustering key** = `itemInSession`. In addition, we include `artist`, `song` and `lenght` as columns in our table.
 
 ### Table 2: `user_history_table`
 To answer the second question, we must:
-- select `artistName`, `song` (sorted by `itemInSession`), `firstName`, `lastName`
+- select `artist`, `song` (sorted by `itemInSession`), `firstName`, `lastName`
 - filtering by `userId` and `sessionId`
 
-So, the **partition key** = `userId` and the **clustering key** = (`sessionId`, `itemInSession`). Although we can identify a unique row with just the `userId` and `sessionId`, the question asks to show the `song` sorted by `itemInSession`. Therefore, we must add it as one of our **clustering columns**. In addition, we include `artistName`, `song`, `firstName` and `lastName` as columns in our table.
+So, the **partition key** = `userId` and the **clustering key** = (`sessionId`, `itemInSession`). Although we can identify a unique row with just the `userId` and `sessionId`, the question asks to show the `song` sorted by `itemInSession`. Therefore, we must add it as one of our **clustering columns**. In addition, we include `artist`, `song`, `firstName` and `lastName` as columns in our table.
 
 ### Table 3: `song_history_table`
 To answer the third question, we must:
