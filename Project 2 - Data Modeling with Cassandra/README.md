@@ -24,14 +24,36 @@ Before proceeding with data modeling, we must apply denormalization in our data 
 
 
 ## Data Modeling
-
-### Queries
+We must design tables to answer the following queries.
 
 1. Give me the artist, song title and song's length in the music app history that was heard during sessionId = 338, and itemInSession = 4.
 
 2. Give me only the following: name of artist, song (sorted by itemInSession) and user (first and last name) for userid = 10, sessionid = 182.
 
 3. Give me every user name (first and last) in my music app history who listened to the song 'All Hands Against His Own'.
+
+To do that, we'll use the approach one query for one table.
+
+### Table 1: `session_history_table`
+To answer the first question, we must:
+- select `artistName`, `song`, `length`
+- filtering by `sessionId` and `itemInSession`
+
+So, the **partition key** = `sessionId` and the **clustering key** = `itemInSession`. In addition, we include `artistName`, `song` and `lenght` as columns in our table.
+
+### Table 2: `user_history_table`
+To answer the second question, we must:
+- select `artistName`, `song` (sorted by `itemInSession`), `firstName`, `lastName`
+- filtering by `userId` and `sessionId`
+
+So, the **partition key** = `userId` and the **clustering key** = (`sessionId`, `itemInSession`). Although we can identify a unique row with just the `userId` and `sessionId`, the question asks to show the `song` sorted by `itemInSession`. Therefore, we must add it as one of our **clustering columns**. In addition, we include `artistName`, `song`, `firstName` and `lastName` as columns in our table.
+
+### Table 3: `song_history_table`
+To answer the third question, we must:
+- select `firstName`, `lastName`
+- filtering by `song`
+
+So, the **partition key** = `song` and the **clustering key** = (`sessionId`, `itemInSession`). In addition, we include `firstName` and `lastName` as columns in our table.
 
 
 ## Project Files
@@ -58,15 +80,15 @@ Finally, the figures below show the result for the queries above.
 
 1. Give me the artist, song title and song's length in the music app history that was heard during sessionId = 338, and itemInSession = 4.
 
-![query1-result](images/query1-result.png)
+![query1-result](images/query1_result.jpg)
 
 2. Give me only the following: name of artist, song (sorted by itemInSession) and user (first and last name) for userid = 10, sessionid = 182.
 
-![query2-result](images/query2-result.png)
+![query2-result](images/query2_result.jpg)
 
 3. Give me every user name (first and last) in my music app history who listened to the song 'All Hands Against His Own'.
 
-![query3-result](images/query3-result.png)
+![query3-result](images/query3_result.jpg)
 
 
 
