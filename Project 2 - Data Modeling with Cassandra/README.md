@@ -63,7 +63,11 @@ In addition to the event data files, the project includes five files:
 2. `create_tables.py`: drops and creates the sparkify keyspace and the tables. It's necessary to run this file to reset the tables before each time we run the ETL scripts.
 3. `etl.py`: reads and processes files from event_data and loads them into the tables.
 4. `test.ipynb`: displays the result for each query above.
+<<<<<<< HEAD
 5. `Project_1B_ Project_Template.ipynb`: runs the project in a notebook way.
+=======
+5. `Project_1B_ Project_Template.ipynb`: the notebook file for the project. 
+>>>>>>> 873ca84eaf98dfff5d9a48cd1604f1a30d9f1617
 
 
 ## Project Execution
