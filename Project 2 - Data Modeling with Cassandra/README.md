@@ -57,16 +57,17 @@ So, the **partition key** = `song` and the **clustering key** = (`sessionId`, `i
 
 
 ## Project Files
-In addition to the event data files, the project includes four files:
+In addition to the event data files, the project includes five files:
 
 1. `cql_queries.py`: contains all cql queries, and is imported into the files below.
 2. `create_tables.py`: drops and creates the sparkify keyspace and the tables. It's necessary to run this file to reset the tables before each time we run the ETL scripts.
 3. `etl.py`: reads and processes files from event_data and loads them into the tables.
 4. `test.ipynb`: displays the result for each query above.
+5. `Project_1B_ Project_Template.ipynb`: the notebook file for the project. 
 
 
 ## Project Execution
-To run the project you must run the files in the order below.
+To run the project you must run the files in the order below (or you can just run the `Project_1B_ Project_Template.ipynb` notebook).
 
 ```
 python create_tables.py
