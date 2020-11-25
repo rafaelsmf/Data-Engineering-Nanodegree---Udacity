@@ -84,14 +84,15 @@ def preprocess_files(root: str, directory: str, filename: str):
 def process_data(session: Cluster.connect, filepath: str):
     """
     - Reads the CSV file from `filepath` row by row.
-    - Extracts data for `session_history` table.
-    - Inserts records into `session_history` table row by row
-    using `session_history_table_insert` query.
-    - Extracts data for `user_history` table.
-    - Inserts records into `user_history` table row by row
-    using `user_history_table_insert` query.
-    - Extracts data for `song_history` table.
-    - Inserts records into `song_history` table row by row.
+    - Extracts data for `song_info_by_session` table.
+    - Inserts records into `song_info_by_session` table row by row
+    using `song_info_by_session_table_insert` query.
+    - Extracts data for `song_user_info_by_user_session` table.
+    - Inserts records into `song_user_info_by_user_session` table row by row
+    using `song_user_info_by_user_session_table_insert` query.
+    - Extracts data for `user_info_by_given_song` table.
+    - Inserts records into `user_info_by_given_song` table row by row
+    using `user_info_by_given_song_table_insert` query.
     
         Parameters: - session: Cluster.connect - the current Cassandra's session
                     - filepath: str - the new CSV filepath
@@ -104,23 +105,22 @@ def process_data(session: Cluster.connect, filepath: str):
             if row[0] == '':
                 continue
                 
-            session_history_row = [int(row[8]), int(row[3]), row[0], row[9], float(row[5])]
-            session.execute(session_history_table_insert, session_history_row)
+            song_info_by_session_row = [int(row[8]), int(row[3]), row[0], row[9], float(row[5])]
+            session.execute(song_info_by_session_table_insert, song_info_by_session_row)
             
-            user_history_row = [int(row[10]), int(row[8]), int(row[3]), row[0], row[9], row[1], row[4]]
-            session.execute(user_history_table_insert, user_history_row)
+            song_user_info_by_user_session_row = \
+            [int(row[10]), int(row[8]), int(row[3]), row[0], row[9], row[1], row[4]]
+            session.execute(song_user_info_by_user_session_table_insert, song_user_info_by_user_session_row)
             
-            song_history_row = [row[9], int(row[8]), int(row[3]), row[1], row[4]]
-            session.execute(song_history_table_insert, song_history_row)
+            user_info_by_given_song_row = [row[9], int(row[10]), row[1], row[4]]
+            session.execute(user_info_by_given_song_table_insert, user_info_by_given_song_row)
             
 
 def main():
     """
     - Establishes connection with the sparkify keyspace and gets session to it.
     - Process the new CSV file.
-    - Remove the new CSV file.
     - Shutdown session and cluster.
-    
     """
     cluster = Cluster(['127.0.0.1'])
     session = cluster.connect()
@@ -128,15 +128,13 @@ def main():
     session.set_keyspace("sparkify")
     
     directory = 'event_data'
-    filename = '2018-11-events'
+    filename = 'event_datafile_new'
     
     preprocess_files(root=os.getcwd(), directory=directory, filename=filename)
     
     filepath = os.getcwd() + '/' + filename + '.csv'
     process_data(session, filepath)
-    
-    os.remove(filepath)
-    
+        
     session.shutdown()
     cluster.shutdown()
     

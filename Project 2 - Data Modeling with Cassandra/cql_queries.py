@@ -1,72 +1,80 @@
 ### DROP TABLES
-session_history_table_drop = "DROP TABLE IF EXISTS session_history;"
-user_history_table_drop = "DROP TABLE IF EXISTS user_history;"
-song_history_table_drop = "DROP TABLE IF EXISTS song_history;"
+song_info_by_session_table_drop = \
+"DROP TABLE IF EXISTS song_info_by_session;"
+
+song_user_info_by_user_session_table_drop = \
+"DROP TABLE IF EXISTS song_user_info_by_user_session;"
+
+user_info_by_given_song_table_drop = \
+"DROP TABLE IF EXISTS user_info_by_given_song;"
 
 
 ### CREATE TABLES
-session_history_table_create = ("""
-CREATE TABLE IF NOT EXISTS session_history (
+song_info_by_session_table_create = ("""
+CREATE TABLE IF NOT EXISTS song_info_by_session (
 sessionId int, itemInSession int, artist text, song text, length float,
 PRIMARY KEY (sessionId, itemInSession)
 );
 """)
 
-user_history_table_create = ("""
-CREATE TABLE IF NOT EXISTS user_history (
+song_user_info_by_user_session_table_create = ("""
+CREATE TABLE IF NOT EXISTS song_user_info_by_user_session (
 userId int, sessionId int, itemInSession int, artist text, song text, firstName text, lastName text, 
-PRIMARY KEY (userId, sessionId, itemInSession)
+PRIMARY KEY ((userId, sessionId), itemInSession)
 );
 """)
 
-song_history_table_create = ("""
-CREATE TABLE IF NOT EXISTS song_history (
-song text, sessionId int, itemInSession int, firstName text, lastName text,
-PRIMARY KEY (song, sessionId, itemInSession)
+user_info_by_given_song_table_create = ("""
+CREATE TABLE IF NOT EXISTS user_info_by_given_song (
+song text, userId int, firstName text, lastName text,
+PRIMARY KEY (song, userId)
 );
 """)
 
 
 ### INSERT RECORDS
-session_history_table_insert = ("""
-INSERT INTO session_history (sessionId, itemInSession, artist, song, length)
+song_info_by_session_table_insert = ("""
+INSERT INTO song_info_by_session (sessionId, itemInSession, artist, song, length)
 VALUES (%s, %s, %s, %s, %s);
 """)
 
-user_history_table_insert = ("""
-INSERT INTO user_history (userId, sessionId, itemInSession, artist, song, firstName, lastName)
+song_user_info_by_user_session_table_insert = ("""
+INSERT INTO song_user_info_by_user_session (userId, sessionId, itemInSession, artist, song, firstName, lastName)
 VALUES (%s, %s, %s, %s, %s, %s, %s);
 """)
 
-song_history_table_insert = ("""
-INSERT INTO song_history (song, sessionId, itemInSession, firstName, lastName)
-VALUES (%s, %s, %s, %s, %s);
+user_info_by_given_song_table_insert = ("""
+INSERT INTO user_info_by_given_song (song, userId, firstName, lastName)
+VALUES (%s, %s, %s, %s);
 """)
 
 
 ### SELECT STATEMENTS
 # QUERY 1
-session_history_table_select = ("""
+song_info_by_session_table_select = ("""
 SELECT artist, song, length 
-FROM session_history
+FROM song_info_by_session
 WHERE sessionId=%s AND itemInSession=%s;
 """)
 
 # QUERY 2
-user_history_table_select = ("""
+song_user_info_by_user_session_table_select = ("""
 SELECT artist, song, firstName, lastName
-FROM user_history
+FROM song_user_info_by_user_session
 WHERE userId=%s AND sessionId=%s;
 """)
 
 # QUERY 3
-song_history_table_select = ("""
+user_info_by_given_song_table_select = ("""
 SELECT firstName, lastName 
-FROM song_history
+FROM user_info_by_given_song
 WHERE song=%s;
 """)
 
 
 ### QUERY LISTS
-drop_table_queries = [session_history_table_drop, user_history_table_drop, song_history_table_drop]
-create_table_queries = [session_history_table_create, user_history_table_create, song_history_table_create]
+drop_table_queries = \
+[song_info_by_session_table_drop, song_user_info_by_user_session_table_drop, user_info_by_given_song_table_drop]
+
+create_table_queries = \
+[song_info_by_session_table_create, song_user_info_by_user_session_table_create, user_info_by_given_song_table_create]

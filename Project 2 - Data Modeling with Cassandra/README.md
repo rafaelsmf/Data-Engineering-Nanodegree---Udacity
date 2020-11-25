@@ -34,39 +34,40 @@ We must design tables to answer the following queries.
 
 To do that, we'll use the approach one query for one table.
 
-### Table 1: `session_history_table`
+### Table 1: `song_info_by_session`
 To answer the first question, we must:
 - select `artist`, `song`, `length`
 - filtering by `sessionId` and `itemInSession`
 
-So, the **partition key** = `sessionId` and the **clustering key** = `itemInSession`. In addition, we include `artist`, `song` and `lenght` as columns in our table.
+As we'll filtering by `sessionId` and `itemInSession`, those are well guess to starting as our **primary key**, as they also identify a unique row. So, my **partition key** will be `sessionId`, because I'm considering a uniform flow of users and the **clustering key** will be `itemInSession`. In addition, we include `artist`, `song` and `lenght` as columns in our table.
 
-### Table 2: `user_history_table`
+### Table 2: `song_user_info_by_user_session`
 To answer the second question, we must:
 - select `artist`, `song` (sorted by `itemInSession`), `firstName`, `lastName`
 - filtering by `userId` and `sessionId`
 
-So, the **partition key** = `userId` and the **clustering key** = (`sessionId`, `itemInSession`). Although we can identify a unique row with just the `userId` and `sessionId`, the question asks to show the `song` sorted by `itemInSession`. Therefore, we must add it as one of our **clustering columns**. In addition, we include `artist`, `song`, `firstName` and `lastName` as columns in our table.
+So, we have to filter by `userId` and `sessionId`. Those identify a unique row, but the question asks to show the `song` sorted by `itemInSession`. Therefore, we must add it as our single **clustering column**. Therefore, the **partition key** will be composite by `userId` and `sessionId`. In addition, we include `artist`, `song`, `firstName` and `lastName` as columns in our table.
 
-### Table 3: `song_history_table`
+### Table 3: `user_info_by_given_song`
 To answer the third question, we must:
 - select `firstName`, `lastName`
 - filtering by `song`
 
-So, the **partition key** = `song` and the **clustering key** = (`sessionId`, `itemInSession`). In addition, we include `firstName` and `lastName` as columns in our table.
+Lastly, we have filter by `song`. So, that's will be our **partition key**. But, just `song` don't identify a unique row. So, we include `userId` as our **clustering column**. Now, with `song` and `userId` as our **primary key** we can identify a unique row. In addition, we include `firstName` and `lastName` as columns in our table.
 
 
 ## Project Files
-In addition to the event data files, the project includes four files:
+In addition to the event data files, the project includes five files:
 
 1. `cql_queries.py`: contains all cql queries, and is imported into the files below.
 2. `create_tables.py`: drops and creates the sparkify keyspace and the tables. It's necessary to run this file to reset the tables before each time we run the ETL scripts.
 3. `etl.py`: reads and processes files from event_data and loads them into the tables.
 4. `test.ipynb`: displays the result for each query above.
+5. `Project_1B_ Project_Template.ipynb`: runs the project in a notebook way.
 
 
 ## Project Execution
-To run the project you must run the files in the order below.
+To run the project you must run the files in the order below (or you can just run the `Project_1B_ Project_Template.ipynb` notebook).
 
 ```
 python create_tables.py
@@ -74,6 +75,7 @@ python etl.py
 ```
 
 **Note:** after running the files above, you can run the `test.ipynb` to check the results for each query above.
+
 
 ## Queries Results
 Finally, the figures below show the result for the queries above.
